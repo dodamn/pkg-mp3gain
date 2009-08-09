@@ -1,0 +1,44 @@
+This package was debianized by Stefan Fritsch <sfritsch@ph.tum.de> on
+Wed,  4 Feb 2004 21:33:28 +0100.
+
+Current maintainer email address is sf@sfritsch.de.
+
+It was downloaded from http://mp3gain.sourceforge.net/download.php
+
+Upstream Author: "Glen Sawyer" <mp3gain@hotmail.com>
+
+Copyright: 2001-2004 Glen Sawyer
+           2002 John Zitterkopf
+           2001 David Robinson
+           2000 Mark Taylor
+           2000 Don Melton
+           1999 Takehiro TOMINAGA
+           1999, 2000 Albert L. Faber
+           1995,1996,1997 by Michael Hipp
+	   Stefan Partheymüller
+	   Artur Polaczynski
+	   Frank Klemm
+	   Mark Armbrust
+	 
+Concept and filter values by David Robinson	
+		
+
+
+    This package is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Lesser General Public
+    License as published by the Free Software Foundation; either
+    version 2 of the License, or (at your option) any later version.
+
+    This package is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public
+    License along with this package; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301,
+    USA.
+
+On Debian systems, the complete text of the GNU Lesser General
+Public License can be found in `/usr/share/common-licenses/LGPL'.
+

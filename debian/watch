@@ -1,0 +1,2 @@
+version=3
+opts="uversionmangle=s/_/./g" http://sf.net/mp3gain/mp3gain-([0-9].*)-src.zip

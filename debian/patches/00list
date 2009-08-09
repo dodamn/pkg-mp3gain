@@ -1,0 +1,6 @@
+01_fix_installdir.dpatch
+02_correct_errorcode_on_failure.dpatch
+03_use_tempfile_by_default.dpatch
+05_fix_segfault_when_files_not_writable.dpatch
+06_fix_overwrite_query_loop.dpatch
+07_fix_CFLAGS.dpatch

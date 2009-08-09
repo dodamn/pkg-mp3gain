@@ -1,0 +1,29 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 06_fix_overwrite_query_loop.dpatch by Stefan Fritsch <sf@debian.org>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: assume "n" if we don't have stdin (#428301)
+
+@DPATCH@
+diff -urNad mp3gain-1.4.6~/mp3gain.c mp3gain-1.4.6/mp3gain.c
+--- mp3gain-1.4.6~/mp3gain.c	2004-12-23 15:47:04.000000000 +0100
++++ mp3gain-1.4.6/mp3gain.c	2007-06-17 17:02:34.000000000 +0200
+@@ -1115,7 +1115,7 @@
+ static 
+ int queryUserForClipping(char * argv_mainloop,int intGainChange)
+ {
+-	char ch;
++	int ch;
+ 
+ 	fprintf(stderr,"\nWARNING: %s may clip with mp3 gain change %d\n",argv_mainloop,intGainChange);
+ 	ch = 0;
+@@ -1125,6 +1125,9 @@
+ 		fprintf(stderr,"Make change? [y/n]:");
+ 		fflush(stderr);
+ 		ch = getchar();
++		if (ch == EOF) {
++			ch='N';
++		}
+ 		ch = toupper(ch);
+ 	}
+ 	if (ch == 'N')

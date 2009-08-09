@@ -1,0 +1,80 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 05_fix_segfault_when_files_not_writable.dpatch by Stefan Fritsch <sf@sfritsch.de>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: don't segfault when files are not writable
+
+@DPATCH@
+diff -urNad mp3gain-1.4.6~/mp3gain.c mp3gain-1.4.6/mp3gain.c
+--- mp3gain-1.4.6~/mp3gain.c	2007-09-29 11:11:15.792120650 +0200
++++ mp3gain-1.4.6/mp3gain.c	2007-09-29 11:12:27.580211620 +0200
+@@ -705,6 +705,7 @@
+ 			inf = NULL;
+             passError(MP3GAIN_UNSPECIFED_ERROR, 3,
+                 "\nCan't open ", outfilename, " for temp writing\n");
++			NowWriting = 0;
+ 			return M3G_ERR_CANT_MAKE_TMP;
+ 		} 
+  
+@@ -715,10 +716,13 @@
+   }
+ 
+   if (inf == NULL) {
+-	  if (UsingTemp && (outf != NULL))
++	  if (UsingTemp && (outf != NULL)) {
+ 		  fclose(outf);
++		  outf = NULL;
++	  }
+ 	  passError( MP3GAIN_UNSPECIFED_ERROR, 3,
+           "\nCan't open ", filename, " for modifying\n");
++	  NowWriting = 0;
+ 	  return M3G_ERR_CANT_MODIFY_FILE;
+   }
+   else {
+@@ -921,6 +925,7 @@
+ 		fclose(inf);
+ 		if (UsingTemp) {
+ 			fclose(outf);
++			outf = NULL;
+ 			deleteFile(outfilename);
+ 			free(outfilename);
+ 			passError(MP3GAIN_CANCELLED,2,"Cancelled processing of ",filename);
+@@ -930,6 +935,7 @@
+ 		}
+ 		if (saveTime) 
+ 		  fileTime(filename, setStoredTime);		
++		NowWriting = 0;
+ 		return;
+ 	}
+ #endif
+@@ -994,12 +1000,14 @@
+ 		fclose(outf);
+ 		fclose(inf);
+ 		inf = NULL;
++		outf = NULL;
+         
+         if (outlength != inlength) {
+             deleteFile(outfilename);
+ 			passError( MP3GAIN_UNSPECIFED_ERROR, 3,
+                 "Not enough temp space on disk to modify ", filename, 
+                 "\nEither free some space, or switch off \"temp file\" option with -T\n");
++            NowWriting = 0;
+             return M3G_ERR_NOT_ENOUGH_TMP_SPACE;
+         }
+         else {
+@@ -1008,6 +1016,7 @@
+ 				deleteFile(outfilename); //try to delete tmp file
+ 				passError( MP3GAIN_UNSPECIFED_ERROR, 3,
+                     "Can't open ", filename, " for modifying\n");
++			    NowWriting = 0;
+ 			    return M3G_ERR_CANT_MODIFY_FILE;
+ 		    }
+ 		    if (moveFile(outfilename, filename)) {
+@@ -1016,6 +1025,7 @@
+                     "\nThe mp3 was correctly modified, but you will need to re-name ", 
+                     outfilename, " to ", filename, 
+                     " yourself.\n");
++		            NowWriting = 0;
+ 			    return M3G_ERR_RENAME_TMP;
+ 		    };
+ 		    if (saveTime)

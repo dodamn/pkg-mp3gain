@@ -1,0 +1,441 @@
+<!doctype refentry PUBLIC "-//OASIS//DTD DocBook V4.2//EN" [
+
+<!-- Process this file with docbook-to-man to generate an nroff manual
+     page: `docbook-to-man manpage.sgml > manpage.1'.  You may view
+     the manual page with: `docbook-to-man manpage.sgml | nroff -man |
+     less'.  A typical entry in a Makefile or Makefile.am is:
+
+manpage.1: manpage.sgml
+	docbook-to-man $< > $@
+
+    
+	The docbook-to-man binary is found in the docbook-to-man package.
+	Please remember that if you create the nroff version in one of the
+	debian/rules file targets (such as build), you will need to include
+	docbook-to-man in your Build-Depends control field.
+
+  -->
+
+  <!-- Fill in your name for FIRSTNAME and SURNAME. -->
+  <!ENTITY dhfirstname "<firstname>STEFAN</firstname>">
+  <!ENTITY dhsurname   "<surname>FRITSCH</surname>">
+  <!-- Please adjust the date whenever revising the manpage. -->
+  <!ENTITY dhdate      "<date>February  4, 2004</date>">
+  <!-- SECTION should be 1-8, maybe w/ subsection other parameters are
+       allowed: see man(7), man(1). -->
+  <!ENTITY dhsection   "<manvolnum>1</manvolnum>">
+  <!ENTITY dhemail     "<email>sf@sfritsch.de</email>">
+  <!ENTITY dhusername  "Stefan Fritsch">
+  <!ENTITY dhucpackage "<refentrytitle>MP3GAIN</refentrytitle>">
+  <!ENTITY dhpackage   "mp3gain">
+  <!ENTITY debian      "<productname>Debian</productname>">
+  <!ENTITY gnu         "<acronym>GNU</acronym>">
+  <!ENTITY lgpl         "&gnu; <acronym>LGPL</acronym>">
+]>
+
+<refentry>
+  <refentryinfo>
+    <address>
+      &dhemail;
+    </address>
+    <author>
+      &dhfirstname;
+      &dhsurname;
+    </author>
+    <copyright>
+      <year>2004</year>
+      <holder>Glen Sawyer and &dhusername;</holder>
+    </copyright>
+    &dhdate;
+  </refentryinfo>
+  <refmeta>
+    &dhucpackage;
+
+    &dhsection;
+  </refmeta>
+  <refnamediv>
+    <refname>&dhpackage;</refname>
+
+    <refpurpose>lossless mp3 normalizer</refpurpose>
+  </refnamediv>
+  <refsynopsisdiv>
+    <cmdsynopsis>
+      <command>&dhpackage;</command>
+
+      <arg><option>options</option></arg>
+
+      <arg><replaceable>infile</replaceable></arg>
+      
+      <arg><option><replaceable>infile 2</replaceable> ...</option></arg>
+    </cmdsynopsis>
+  </refsynopsisdiv>
+  
+  <refsect1>
+    <title>DESCRIPTION</title>
+
+    <para>This manual page documents briefly the
+      <command>&dhpackage;</command>
+      command.</para>
+
+    <para>This manual page was written for the &debian; distribution
+      because the original program does not have a manual page.
+     </para>
+
+    <para><command>&dhpackage;</command> can analyze and adjust mp3 files
+    so that they have the same volume.</para>
+    
+    <para><command>&dhpackage;</command> does not just do peak normalization,
+    as many normalizers do. Instead, it does some statistical analysis to
+    determine how loud the file actually sounds to the human ear. Also, the
+    changes <command>&dhpackage;</command> makes are completely lossless. There
+    is no quality lost in the change because the program adjusts the mp3 file
+    directly, without decoding and re-encoding.</para>
+
+    <para><command>&dhpackage;</command> optionally writes gain adjustments
+    directly into the encoded data. In this case, the adjustment works
+    with all mp3 players, i.e. no support for a special tag is required.
+    This mode is activated by any of the options <option>-r</option>,
+    <option>-a</option>, <option>-g</option>, or <option>-l</option>.</para>
+
+    <para>If none of the above options are given, the recommended gain change
+    is instead written to a special tag in the mp3 file. In this case, the
+    adjustment only works with mp3 players that support this tag.
+    Some mp3 players refer to this as ReplayGain.
+    The tag is written either in APEv2 format (default) or in ID3v2 format
+    (with <option>-s&nbsp;i</option>).
+    If you only want to print the recommended gain change (and not modify
+    the file at all) you may use the <option>-s s</option> (skip tag)
+    option. </para>
+
+    <para>The method mp3gain uses to determine the desired volume
+    is described at
+    <ulink url="http://www.replaygain.org/">www.replaygain.org</ulink>.
+    See also <filename>/usr/share/doc/mp3gain/README.method</filename> .
+    </para>
+    
+  
+
+
+  </refsect1>
+  <refsect1>
+    <title>OPTIONS</title>
+
+
+    <variablelist>
+      <varlistentry>
+        <term><option>-?</option>
+          <option>-h</option>
+        </term>
+        <listitem>
+          <para>Show summary of options.</para>
+        </listitem>
+      </varlistentry>
+      
+      <varlistentry>
+        <term><option>-g <replaceable>i</replaceable></option>
+        </term>
+        <listitem>
+          <para>apply gain <replaceable>i</replaceable> to mp3 without
+	   doing any analysis</para>
+        </listitem>
+      </varlistentry>
+      
+      <varlistentry>
+        <term><option>-l 0 <replaceable>i</replaceable></option>
+        </term>
+        <listitem>
+          <para>apply gain <replaceable>i</replaceable> to channel 0 
+	  	(left channel) of mp3
+                  without doing any analysis (ONLY works for STEREO mp3s,
+                  not Joint Stereo mp3s)</para>
+        </listitem>
+      </varlistentry>
+      
+      <varlistentry>
+        <term><option>-l 1 <replaceable>i</replaceable></option>
+        </term>
+        <listitem>
+          <para>apply gain <replaceable>i</replaceable> to channel 1
+	  	(right channel) of mp3
+                  without doing any analysis (ONLY works for STEREO mp3s,
+                  not Joint Stereo mp3s)</para>
+        </listitem>
+      </varlistentry>
+      
+      <varlistentry>
+        <term><option>-r</option>
+        </term>
+        <listitem>
+          <para>apply Track gain automatically (all files set to equal loudness)</para>
+        </listitem>
+      </varlistentry>
+      
+      <varlistentry>
+        <term><option>-k</option>
+        </term>
+        <listitem>
+          <para>automatically lower Track gain to not clip audio</para>
+        </listitem>
+      </varlistentry>
+      
+      <varlistentry>
+        <term><option>-a</option>
+        </term>
+        <listitem>
+          <para>apply Album gain automatically (files are all from the same
+                      album: a single gain change is applied to all files, so
+                      their loudness relative to each other remains unchanged,
+                      but the average album loudness is normalized)</para>
+        </listitem>
+      </varlistentry>
+      
+      <varlistentry>
+        <term><option>-m <replaceable>i</replaceable></option>
+        </term>
+        <listitem>
+          <para>modify suggested MP3 gain by integer <replaceable>i</replaceable></para>
+        </listitem>
+      </varlistentry>
+      
+      <varlistentry>
+        <term><option>-d <replaceable>n</replaceable></option>
+        </term>
+        <listitem>
+          <para>modify suggested dB gain by floating-point
+	  <replaceable>n</replaceable></para>
+        </listitem>
+      </varlistentry>
+      
+      <varlistentry>
+        <term><option>-c</option>
+        </term>
+        <listitem>
+          <para>ignore clipping warning when applying gain</para>
+        </listitem>
+      </varlistentry>
+      
+      <varlistentry>
+        <term><option>-o</option>
+        </term>
+        <listitem>
+          <para>output is a database-friendly tab-delimited list</para>
+        </listitem>
+      </varlistentry>
+      
+      <varlistentry>
+        <term><option>-t</option>
+        </term>
+        <listitem>
+          <para>mp3gain writes modified mp3 to temp file, then deletes original
+             instead of modifying bytes in original file (This is the default in
+	     Debian)</para>
+        </listitem>
+      </varlistentry>
+      
+      <varlistentry>
+        <term><option>-T</option>
+        </term>
+        <listitem>
+          <para>mp3gain modifies bytes in original file instead of
+	   writing to temp file.</para>
+        </listitem>
+      </varlistentry>
+      
+      <varlistentry>
+        <term><option>-q</option>
+        </term>
+        <listitem>
+          <para>Quiet mode: no status messages</para>
+        </listitem>
+      </varlistentry>
+      
+      <varlistentry>
+        <term><option>-p</option>
+        </term>
+        <listitem>
+          <para>Preserve original file timestamp</para>
+        </listitem>
+      </varlistentry>
+      
+      <varlistentry>
+        <term><option>-x</option>
+        </term>
+        <listitem>
+          <para>Only find max. amplitude of mp3</para>
+        </listitem>
+      </varlistentry>
+      
+      <varlistentry>
+        <term><option>-f</option>
+        </term>
+        <listitem>
+          <para>Force <command>mp3gain</command> to assume input file
+	  is an MPEG 2 Layer III file
+             (i.e. don't check for mis-named Layer I or Layer II files)</para>
+        </listitem>
+      </varlistentry>
+      
+      <varlistentry>
+        <term><option>-s c</option>
+        </term>
+        <listitem>
+          <para>only check stored tag info (no other processing)</para>
+        </listitem>
+      </varlistentry>
+      
+      <varlistentry>
+        <term><option>-s d</option>
+        </term>
+        <listitem>
+          <para>delete stored tag info (no other processing)</para>
+        </listitem>
+      </varlistentry>
+      
+      <varlistentry>
+        <term><option>-s i</option>
+        </term>
+        <listitem>
+          <para>use ID3v2 tag for gain information;
+          if the file contained gain data in APEv2 format, it is upgraded
+          to ID3v2</para>
+        </listitem>
+      </varlistentry>
+      
+       <varlistentry>
+        <term><option>-s a</option>
+        </term>
+        <listitem>
+          <para>use APEv2 tag for gain information (default)</para>
+        </listitem>
+      </varlistentry>
+      
+       <varlistentry>
+        <term><option>-s s</option>
+        </term>
+        <listitem>
+          <para>skip (ignore) stored tag info (do not read or write tags)</para>
+        </listitem>
+      </varlistentry>
+      
+      <varlistentry>
+        <term><option>-s r</option>
+        </term>
+        <listitem>
+          <para>force re-calculation (do not read tag info)</para>
+        </listitem>
+      </varlistentry>
+      
+      <varlistentry>
+        <term><option>-u</option>
+        </term>
+        <listitem>
+          <para>undo changes made by mp3gain (based on stored tag info)</para>
+        </listitem>
+      </varlistentry>
+      
+      <varlistentry>
+        <term><option>-w</option>
+        </term>
+        <listitem>
+          <para>"wrap" gain change if gain+change &gt; 255 or gain+change &lt; 0
+              (see below or use <option>-? wrap</option> switch for a complete
+	      explanation)</para>
+        </listitem>
+      </varlistentry>
+      
+      <varlistentry>
+        <term><option>-v</option>
+        </term>
+        <listitem>
+          <para>Show version of program.</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+    <para>If you specify <option>-r</option> and <option>-a</option>,
+    only the second one will work.</para>
+    <para>If you do not specify <option>-c</option>, the program will
+    stop and ask before
+     applying gain change to a file that might clip</para>
+   <refsect2><title>The WRAP option</title>
+   <para>Here's the problem:
+     The "global gain" field that mp3gain adjusts is an 8-bit unsigned integer, so
+     the possible values are 0 to 255.
+   </para><para>
+     MOST mp3 files (in fact, ALL the mp3 files I've examined so far) don't go
+     over 230. So there's plenty of headroom on top-- you can increase the gain
+     by 37dB (multiplying the amplitude by 76) without a problem.
+   </para><para>
+     The problem is at the bottom of the range. Some encoders create frames with
+     0 as the global gain for silent frames.
+     What happens when you _lower_ the global gain by 1?
+     Well, in the past, mp3gain always simply wrapped the result up to 255.
+     That way, if you lowered the gain by any amount and then raised it by the
+     same amount, the mp3 would always be _exactly_ the same.
+   </para><para>
+     There are a few encoders out there, unfortunately, that create 0-gain frames
+     with other audio data in the frame.
+     As long as the global gain is 0, you'll never hear the data.
+     But if you lower the gain on such a file, the global gain is suddenly _huge_.
+     If you play this modified file, there might be a brief, very loud blip.
+   </para><para>
+     So now the default behavior of mp3gain is to _not_ wrap gain changes.
+     In other words,
+     <orderedlist>
+     <listitem><para>
+        If the gain change would make a frame's global gain drop below 0,
+	then the global gain is set to 0.
+     </para></listitem><listitem><para>
+        If the gain change would make a frame's global gain grow above 255,
+	then the global gain is set to 255.
+     </para></listitem><listitem><para> 
+        If a frame's global gain field is already 0, it is not changed, even if
+	the gain change is a positive number.
+     </para></listitem>
+     </orderedlist>
+   </para><para>
+     To use the original "wrapping" behavior, use the <option>-w</option> switch.
+   </para>
+   </refsect2>
+  </refsect1>
+  <refsect1>
+    <title>SEE ALSO</title>
+
+    <para>The homepage of mp3gain is located at
+     <ulink url="http://mp3gain.sourceforge.net/">http://mp3gain.sourceforge.net/</ulink> .
+    </para>
+  </refsect1> 
+  <refsect1>
+    <title>AUTHOR</title>
+
+    <para>This manual page was written by &dhusername; &dhemail; for
+      the &debian; system (but may be used by others).  Permission is
+      granted to copy, distribute and/or modify this document under
+      the terms of the &gnu; Lesser General Public License, Version 2.1 or 
+      any later version published by the Free Software Foundation.
+    </para>
+	<para>
+	  On Debian systems, the complete text of the GNU Lesser General Public
+	  License can be found in /usr/share/common-licenses/LGPL.
+	</para>
+
+  </refsect1>
+</refentry>
+
+<!-- Keep this comment at the end of the file
+Local variables:
+mode: sgml
+sgml-omittag:t
+sgml-shorttag:t
+sgml-minimize-attributes:nil
+sgml-always-quote-attributes:t
+sgml-indent-step:2
+sgml-indent-data:t
+sgml-parent-document:nil
+sgml-default-dtd-file:nil
+sgml-exposed-tags:nil
+sgml-local-catalogs:nil
+sgml-local-ecat-files:nil
+End:
+-->
+
+

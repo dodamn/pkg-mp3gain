@@ -1,0 +1,23 @@
+Q: What dB value does mp3gain normalize to? How does this compare with
+normalize-audio?
+
+A: mp3gain and normalize-audio use different methods to determine the 
+perceived volume of a file, so the numbers are not comparable. As I  understand
+it, normalize-audio applies a smoothing filter and then  sets the maximum to
+-12dBFS. mp3gain sorts the volume and then uses  the value at 95% (i.e. 5% of
+the file are louder, 95% are quieter).  This value is set to -20dBFS. I have
+tried a few files and found the  difference in the recomended values to vary
+between 3dB and 6dB.
+
+The method mp3gain uses to determine the perceived volume is described at
+http://www.replaygain.org/.
+
+
+
+
+Q: Why are the files not exactly at the same volume?
+
+A: Since mp3gain changes the global gain value in every mp3 frame, it can only
+use 1.5dB steps for adjusting the volume. It will however write replaygain
+values to tags with finer accuracy than these 1.5dB steps. 
+

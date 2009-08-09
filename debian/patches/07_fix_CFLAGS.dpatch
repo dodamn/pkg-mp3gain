@@ -1,0 +1,19 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 07_fix_CFLAGS.dpatch by Stefan Fritsch <sf@debian.org>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: Allow using CFLAGS from debian/rules to fix DEB_BUILD_OPTIONS
+
+@DPATCH@
+diff -urNad mp3gain-1.4.6~/Makefile mp3gain-1.4.6/Makefile
+--- mp3gain-1.4.6~/Makefile	2007-07-28 22:08:24.000000000 +0200
++++ mp3gain-1.4.6/Makefile	2007-07-28 22:11:27.000000000 +0200
+@@ -6,7 +6,7 @@
+ 
+ CC=     gcc
+ 
+-CFLAGS= -Wall -O3 -DHAVE_MEMCPY
++CFLAGS+= -Wall -DHAVE_MEMCPY
+ 
+ ifneq ($(OSTYPE),beos)
+ INSTALL_PATH= /usr/local/bin

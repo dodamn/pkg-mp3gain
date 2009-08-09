@@ -1,0 +1,19 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 01_fix_installdir.dpatch by Stefan Fritsch <sf@sfritsch.de>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: use DESTDIR
+
+@DPATCH@
+diff -urNad mp3gain-1.4.6~/Makefile mp3gain-1.4.6/Makefile
+--- mp3gain-1.4.6~/Makefile	2006-04-06 22:22:35.000000000 +0200
++++ mp3gain-1.4.6/Makefile	2006-04-06 22:36:29.000000000 +0200
+@@ -9,7 +9,7 @@
+ CFLAGS= -Wall -O3 -DHAVE_MEMCPY
+ 
+ ifneq ($(OSTYPE),beos)
+-INSTALL_PATH= /usr/local/bin
++INSTALL_PATH= $(DESTDIR)/usr/bin
+ else
+ INSTALL_PATH= $(HOME)/config/bin
+ endif

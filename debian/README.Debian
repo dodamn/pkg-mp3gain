@@ -1,0 +1,4 @@
+On ReiserFS (as of kernel 2.4.26 and 2.6.7), writing to a temp file
+(-t option) seems to be a lot faster than modifying the original
+file directly. Therefore, -t is now the default in Debian. The
+original behaviour can be restored with -T.
