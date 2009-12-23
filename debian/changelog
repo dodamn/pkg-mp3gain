@@ -1,3 +1,9 @@
+mp3gain (1.5.1-2~ppa2~jaunty1) jaunty; urgency=low
+
+  * Compatible with foobar2000 style replaygain id3v2 tag
+
+ -- dodamn <dodamn@gmail.com>  Thu, 24 Dec 2009 04:18:28 +0900
+
 mp3gain (1.5.1-2~ppa1~jaunty1) jaunty; urgency=low
 
   * Backport from lucid to jaunty without changes
