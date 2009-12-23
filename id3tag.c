@@ -17,6 +17,8 @@
  * of the volume adjustment, stored as an unsigned fixed point value with
  * 1 integer bit and (peakbits-1) fractional bits.
  *
+ * Also we store Replay Gain data in TXXX frames with foobar2000 style.
+ *
  * In addition to standard Replay Gain data, we also store mp3gain-specific
  * fields in TXXX frames. The description string of such frames starts with
  * "MP3GAIN_". These frames are only needed when mp3gain updates the encoded
@@ -480,6 +482,67 @@ static int id3_decode_mp3gain_frame(const struct ID3v2FrameStruct *frame, struct
 		}
 		return 1;
 	}
+
+	return 0;
+}
+
+
+/**
+ * Decode a foobar2000 style replaygain frame, either "replaygain_track_gain",
+ * "replaygain_track_peak", "replaygain_album_gain" or "replaygain_album_peak".
+ *
+ * Store gain information in the info structure, unless info == NULL.
+ * Return 1 if the frame is a foobar2000 style replaygain frame, 0 otherwise.
+ */
+static int id3_decode_foobar2000_replaygain_frame(const struct ID3v2FrameStruct *frame, struct MP3GainTagInfo *info)
+{
+	unsigned long p, k;
+	char buf[64];
+	double v;
+
+	/* Ignore non-TXXX frames. */
+	if (memcmp(frame->frameid, "TXXX", 4) != 0)
+		return 0;
+
+	p = frame->hskip;
+
+	/* Check text encoding; we understand only 0 (ISO-8859-1) and 3 (UTF-8). */
+	if (p >= frame->len || (frame->data[p] != 0 && frame->data[p] != 3))
+		return 0;
+	p++;
+
+	/* Copy character data to temporary buffer. */
+	k = (frame->len - p + 1 < sizeof(buf)) ? (frame->len - p) : (sizeof(buf) - 2);
+	memcpy(buf, frame->data + p, k);
+	buf[k] = '\0';		/* terminate the value string */
+	buf[k+1] = '\0';	/* ensure buf contains two terminated strings, even for invalid frame data */
+
+	/* Check identification string. */
+	if (strcasecmp(buf, "replaygain_track_gain") == 0) {
+		if (sscanf(buf + strlen(buf) + 1, "%lf dB", &v) == 1 && info != NULL) {
+            info->haveTrackGain = 1;
+            info->trackGain = v;
+		}
+		return 1;
+	} else if (strcasecmp(buf, "replaygain_track_peak") == 0) {
+		if (sscanf(buf + strlen(buf) + 1, "%lf", &v) == 1 && info != NULL) {
+            info->haveTrackPeak = 1;
+            info->trackPeak = v;
+		}
+		return 1;
+	} else if (strcasecmp(buf, "replaygain_album_gain") == 0) {
+		if (sscanf(buf + strlen(buf) + 1, "%lf dB", &v) == 1 && info != NULL) {
+            info->haveAlbumGain = 1;
+            info->albumGain = v;
+		}
+		return 1;
+	} else if (strcasecmp(buf, "replaygain_album_peak") == 0) {
+        if (sscanf(buf + strlen(buf) + 1, "%lf", &v) == 1 && info != NULL) {
+            info->haveAlbumPeak = 1;
+            info->albumPeak = v;
+        }
+        return 1;
+    }
 
 	return 0;
 }
@@ -1077,6 +1140,7 @@ int ReadMP3GainID3Tag(char *filename, struct MP3GainTagInfo *info)
 		/* Got the tag; extract gain information from the RVA2/TXXX frames. */
 		frame = tag.frames;
 		while (frame) {
+            id3_decode_foobar2000_replaygain_frame(frame, info);
 			id3_decode_rva2_frame(frame, info);
 			id3_decode_mp3gain_frame(frame, info);
 			frame = frame->next;
@@ -1148,7 +1212,8 @@ int WriteMP3GainID3Tag(char *filename, struct MP3GainTagInfo *info, int saveTime
 	pframe = &(tag.frames);
 	while ((frame = *pframe)) {
 		if (id3_decode_rva2_frame(frame, NULL) == 1 ||
-		    id3_decode_mp3gain_frame(frame, NULL) == 1) {
+		    id3_decode_mp3gain_frame(frame, NULL) == 1 ||
+            id3_decode_foobar2000_replaygain_frame(frame, NULL) == 1) {
 			/* This is a ReplayGain frame; kill it. */
 			need_update = 1;
 			*pframe = frame->next;
@@ -1172,6 +1237,36 @@ int WriteMP3GainID3Tag(char *filename, struct MP3GainTagInfo *info, int saveTime
 		*pframe = frame;
 		pframe = &(frame->next);
 	}
+
+    /* Append foobar2000 style replaygain frames */
+    if (info->haveTrackGain) {
+        need_update = 1;
+        sprintf(sbuf, "%-+9.6f%s", info->trackGain, " dB");
+        frame = id3_make_frame("TXXX", "bsbs", 0, "replaygain_track_gain", 0, sbuf);
+        *pframe = frame;
+        pframe = &(frame->next);
+    }
+    if (info->haveTrackPeak) {
+        need_update = 1;
+        sprintf(sbuf, "%-8.6f", info->trackPeak);
+        frame = id3_make_frame("TXXX", "bsbs", 0, "replaygain_track_peak", 0, sbuf);
+        *pframe = frame;
+        pframe = &(frame->next);
+    }
+    if (info->haveAlbumGain) {
+        need_update = 1;
+        sprintf(sbuf, "%-+9.6f%s", info->albumGain, " dB");
+        frame = id3_make_frame("TXXX", "bsbs", 0, "replaygain_album_gain", 0, sbuf);
+        *pframe = frame;
+        pframe = &(frame->next);
+    }
+    if (info->haveAlbumPeak) {
+        need_update = 1;
+        sprintf(sbuf, "%-8.6f", info->albumPeak);
+        frame = id3_make_frame("TXXX", "bsbs", 0, "replaygain_album_peak", 0, sbuf);
+        *pframe = frame;
+        pframe = &(frame->next);
+    }
 
 	/* Append mp3gain-specific frames. */
 	if (info->haveMinMaxGain) {
