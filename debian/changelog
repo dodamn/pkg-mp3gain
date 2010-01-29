@@ -1,3 +1,9 @@
+mp3gain (1.5.1-2~ppa2~karmic1) karmic; urgency=low
+
+  * Detach hard-coded 'foobar2000 style replaygain tag' feature to a patch
+
+ -- dodamn <dodamn@gmail.com>  Fri, 29 Jan 2010 22:03:11 +0900
+
 mp3gain (1.5.1-2~ppa1~karmic1) karmic; urgency=low
 
   * Release for karmic
