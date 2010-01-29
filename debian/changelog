@@ -1,3 +1,12 @@
+mp3gain (1.5.1-2~ppa1~karmic1) karmic; urgency=low
+
+  * Release for karmic
+    - debian/copyright
+      + Fix initial debianizationer's info
+      + Fix current maintainer's info
+
+ -- dodamn <dodamn@gmail.com>  Fri, 29 Jan 2010 19:44:28 +0900
+
 mp3gain (1.5.1-2~ppa2~jaunty1) jaunty; urgency=low
 
   * Compatible with foobar2000 style replaygain id3v2 tag
