@@ -5,4 +5,5 @@
 06_fix_overwrite_query_loop.dpatch
 07_fix_CFLAGS.dpatch
 08_add_foobar2000_style_replaygain_id3v2_tag.dpatch
+09_trailingspace.dpatch
 
