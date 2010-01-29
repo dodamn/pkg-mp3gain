@@ -4,3 +4,5 @@
 05_fix_segfault_when_files_not_writable.dpatch
 06_fix_overwrite_query_loop.dpatch
 07_fix_CFLAGS.dpatch
+08_add_foobar2000_style_replaygain_id3v2_tag.dpatch
+
